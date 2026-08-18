@@ -1,0 +1,26 @@
+Task 4: Diagnosis
+
+For each module in buggy_regs.v, answer:
+  (a) Is the buggy version combinational or sequential (as intended)?
+  (b) What is actually wrong with it, precisely?
+  (c) What would you observe in simulation or synthesis because of the bug?
+
+reg_bug1:
+(a)
+(b)
+(c)
+
+reg_bug2:
+(a)
+(b)
+(c)
+
+reg_bug3:
+(a)
+(b)
+(c)
+
+reg_bug4:
+(a)
+(b)
+(c)

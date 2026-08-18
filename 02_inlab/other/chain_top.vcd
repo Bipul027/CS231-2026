@@ -1,0 +1,163 @@
+$date
+	Wed Aug 12 13:03:53 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_chain_top $end
+$var wire 1 ! q2_nb $end
+$var wire 1 " q2_21 $end
+$var wire 1 # q2_12 $end
+$var wire 1 $ q1_nb $end
+$var wire 1 % q1_21 $end
+$var wire 1 & q1_12 $end
+$var reg 1 ' clk $end
+$scope module dut_block_12 $end
+$var wire 1 ' clk $end
+$var wire 1 # q2 $end
+$var wire 1 & q1 $end
+$scope module tff1 $end
+$var wire 1 ' clk $end
+$var wire 1 ( t $end
+$var reg 1 & q $end
+$upscope $end
+$scope module tff2 $end
+$var wire 1 ' clk $end
+$var wire 1 & t $end
+$var reg 1 # q $end
+$upscope $end
+$upscope $end
+$scope module dut_block_21 $end
+$var wire 1 ' clk $end
+$var wire 1 " q2 $end
+$var wire 1 % q1 $end
+$scope module tff1 $end
+$var wire 1 ' clk $end
+$var wire 1 ) t $end
+$var reg 1 % q $end
+$upscope $end
+$scope module tff2 $end
+$var wire 1 ' clk $end
+$var wire 1 % t $end
+$var reg 1 " q $end
+$upscope $end
+$upscope $end
+$scope module dut_nonblock $end
+$var wire 1 ' clk $end
+$var wire 1 ! q2 $end
+$var wire 1 $ q1 $end
+$scope module tff1 $end
+$var wire 1 ' clk $end
+$var wire 1 * t $end
+$var reg 1 $ q $end
+$upscope $end
+$scope module tff2 $end
+$var wire 1 ' clk $end
+$var wire 1 $ t $end
+$var reg 1 ! q $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+1*
+1)
+1(
+0'
+0&
+0%
+0$
+0#
+0"
+0!
+$end
+#5000
+1$
+1&
+1"
+1%
+1'
+#10000
+0'
+#15000
+1!
+0$
+0%
+0"
+0&
+1'
+#20000
+0'
+#25000
+1$
+1&
+1"
+1%
+1'
+#30000
+0'
+#35000
+0!
+0$
+0%
+0"
+0&
+1'
+#40000
+0'
+#45000
+1$
+1&
+1"
+1%
+1'
+#50000
+0'
+#55000
+1!
+0$
+0%
+0"
+0&
+1'
+#60000
+0'
+#65000
+1$
+1&
+1"
+1%
+1'
+#70000
+0'
+#75000
+0!
+0$
+0%
+0"
+0&
+1'
+#80000
+0'
+#85000
+1$
+1&
+1"
+1%
+1'
+#90000
+0'
+#95000
+1!
+0$
+0%
+0"
+0&
+1'
