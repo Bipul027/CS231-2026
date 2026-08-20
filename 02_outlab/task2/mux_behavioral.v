@@ -5,4 +5,8 @@ module mux_behavioral (
     output reg y
 );
 
+    always @(*) begin
+        if (sel) y = b;
+        else y = a;
+    end
 endmodule

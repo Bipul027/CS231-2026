@@ -9,4 +9,12 @@ module loadable_reg (
     // (hold q if load is low, take d if load is high), then register
     // that value on the clock edge.
 
+    wire next_q;
+    mux_behavioral mux21(.a(q), .b(d), .sel(load), .y(next_q));
+
+    always@ (posedge clk) begin
+        if (rst) q <= 0;
+        else q <= next_q;
+    end
+
 endmodule

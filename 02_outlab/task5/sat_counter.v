@@ -17,4 +17,23 @@ module sat_counter (
     //     at 0 instead of wrapping to 15)
     //   - if up and down are equal (00 or 11): count holds its value
 
+    reg [3:0] next_c;
+    always@ (*) begin
+        if (up == 1 && down == 0) begin
+            if (next_c != 4'b1111) 
+                next_c = count + 1;
+        end
+        else if (down == 1 && up == 0) begin
+            if (next_c != 4'b0000)
+                next_c = count - 1;
+        end
+        else begin
+            next_c = count;
+        end
+    end
+
+    always@ (posedge clk) begin
+        if (rst) count <= 0;
+        else count <= next_c;
+    end
 endmodule
