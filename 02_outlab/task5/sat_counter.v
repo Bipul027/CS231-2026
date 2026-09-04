@@ -19,12 +19,14 @@ module sat_counter (
 
     reg [3:0] next_c;
     always@ (*) begin
+        next_c = count;
+        
         if (up == 1 && down == 0) begin
-            if (next_c != 4'b1111) 
+            if (count != 4'b1111) 
                 next_c = count + 1;
         end
         else if (down == 1 && up == 0) begin
-            if (next_c != 4'b0000)
+            if (count != 4'b0000)
                 next_c = count - 1;
         end
         else begin
