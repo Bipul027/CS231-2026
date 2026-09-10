@@ -29,6 +29,28 @@ section .text
 _start:
 ; put 1 in rdi if rectangles overlap, 0 otherwise
     
+    xor rdi, rdi
+
+    mov rbx, [rect_a.x1]
+    cmp rbx, [rect_b.x2]
+    jge .end
+
+    mov rbx, [rect_a.x2]
+    cmp rbx, [rect_b.x1]
+    jle .end
+
+    mov rbx, [rect_a.y1]
+    cmp rbx, [rect_b.y2]
+    jge .end
+
+    mov rbx, [rect_a.y2]
+    cmp rbx, [rect_b.y1]
+    jle .end
+
+    mov rdi, 1
+
+    .end:
+
     mov rax, 60
     syscall
 

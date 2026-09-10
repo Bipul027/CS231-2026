@@ -21,5 +21,21 @@ section .text
 _start:
 ;   Find the dot product of vec1 and vec2 and put it in `rdi`    
 
+    xor rdi, rdi    ; Running dot product
+    xor rcx, rcx    ; Index count
+    .loopbegin: 
+        cmp rcx, vecsize
+        jge .loopend
+
+        mov rax, [vec1 + 8*rcx]
+        imul rax, [vec2 + 8*rcx]
+
+        add rdi, rax
+
+        inc rcx
+        jmp .loopbegin
+
+    .loopend:
+
     mov rax, 60
     syscall

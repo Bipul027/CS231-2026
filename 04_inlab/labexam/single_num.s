@@ -8,8 +8,18 @@ section .text
     global _start
 
 _start:
+    xor edi, edi
+    xor rcx, rcx
 
+    .loopbegin:
+        cmp rcx, array_len
+        jge .loopend
 
+        xor edi, [array + rcx*4]
+        inc rcx
+
+        jmp .loopbegin
+    .loopend:
 
     mov eax, 60
     syscall

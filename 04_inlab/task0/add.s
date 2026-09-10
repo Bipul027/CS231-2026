@@ -7,6 +7,7 @@ section .text
 
 _start:
 ;   move `a` into `rdi` and add `b` to it
-
+    mov rdi, [a]
+    add rdi, [b]
     mov rax, 60
     syscall
