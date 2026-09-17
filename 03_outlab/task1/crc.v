@@ -9,6 +9,11 @@ module crc8_update (
 );
 
     // TODO
+    wire feedback;
+    assign feedback = crc_in[7] ^ data_bit;
+
+    assign crc_out = (feedback == 1)? {crc_in[6:0], 1'b0} ^ 8'hD5 : {crc_in[6:0], 1'b0};
+
 
 endmodule
 
@@ -27,6 +32,34 @@ module crc8_serial (
     // NOTE: You need to latch output from crc8_update separately
     // And keep a latch for storing output `crc` separately
 
+    reg [7:0] crc_reg;
+    reg crc_valid_reg;
+    wire [7:0] crc_next;
+
+    crc8_update crc_inst (
+        .crc_in     (crc_reg),
+        .data_bit   (data_bit),
+        .crc_out    (crc_next)
+    );
+
+    always @(posedge clk) begin
+        if (rst) begin
+            crc_reg <= 8'hFF;
+            crc_valid_reg <= 1'b0;
+        end
+        else begin
+            crc_valid_reg <= 1'b0;
+            if (data_valid) begin
+                crc_reg <= crc_next;
+
+                if (data_last)
+                    crc_valid_reg <= 1'b1;
+            end
+        end
+    end
+
+    assign crc = crc_reg;
+    assign crc_valid = crc_valid_reg;
 endmodule
 
 
@@ -44,7 +77,10 @@ module crc_update #(
 );
 
     // TODO
+    wire feedback;
+    assign feedback = crc_in[WIDTH-1] ^ data_bit;
 
+    assign crc_out = (feedback == 1)? {crc_in[WIDTH-2:0], 1'b0} ^ POLY : {crc_in[WIDTH-2:0], 1'b0};
 endmodule
 
 
@@ -63,7 +99,37 @@ module crc_serial #(
 );
 
     // TODO
+    reg [WIDTH-1:0] crc_reg;
+    reg crc_valid_reg;
+    wire [WIDTH-1:0] crc_next;
 
+    crc_update #(
+        .WIDTH(WIDTH),
+        .POLY(POLY)
+    ) crc_inst_1 (
+        .crc_in(crc_reg),
+        .data_bit(data_bit),
+        .crc_out(crc_next)
+    );
+
+    always @(posedge clk) begin
+        if (rst) begin
+            crc_reg <= INIT;
+            crc_valid_reg <= 1'b0;
+        end
+        else begin
+            crc_valid_reg <= 1'b0;
+            if (data_valid) begin
+                crc_reg <= crc_next;
+
+                if (data_last)
+                    crc_valid_reg <= 1'b1;
+            end
+        end
+    end
+
+    assign crc = crc_reg;
+    assign crc_valid = crc_valid_reg;
 endmodule
 
 
@@ -84,13 +150,23 @@ module crc_parallel #(
     // array of registers
     wire [WIDTH-1:0] crc_stage [0:DATA_WIDTH];
 
-    assign /* TODO */   = crc_in;
-    assign crc_out      = /* TODO */;
+    assign crc_stage[0]   = crc_in;
+    assign crc_out      = crc_stage[DATA_WIDTH];
 
     // TODO: write genvar for loop to loop over DATA_WIDTH times and generate hardware for parallel CRC
     genvar i;
     generate
         // TODO
+        for (i = 0; i < DATA_WIDTH; i = i + 1) begin : gen_crc_loop
+            crc_update #(
+                .WIDTH(WIDTH),
+                .POLY(POLY)
+            ) crc_inst_2 (
+                .crc_in     (crc_stage[i]),
+                .data_bit   (data[DATA_WIDTH - 1 - i]),
+                .crc_out    (crc_stage[i + 1])
+            );
+        end
     endgenerate
 
 
@@ -113,5 +189,38 @@ module crc_parallel_serial #(
 );
 
     // TODO
+    reg [WIDTH-1:0] crc_reg;
+    reg             crc_valid_reg;
+    wire [WIDTH-1:0] crc_next;
 
+    crc_parallel #(
+        .WIDTH(WIDTH),
+        .POLY(POLY),
+        .DATA_WIDTH(DATA_WIDTH)
+    ) crc_parallel_inst (
+        .crc_in (crc_reg),
+        .data    (data),
+        .crc_out (crc_next)
+    );
+
+    always @(posedge clk) begin
+        if (rst) begin
+            crc_reg <= INIT;
+            crc_valid_reg <= 1'b0;
+        end
+        else begin
+            crc_valid_reg <= 1'b0;
+
+            if (data_valid) begin
+                crc_reg <= crc_next;
+
+                if (data_last) begin
+                    crc_valid_reg <= 1'b1;
+                end
+            end
+        end
+    end
+
+    assign crc = crc_reg;
+    assign crc_valid = crc_valid_reg;
 endmodule
