@@ -4,4 +4,5 @@ module and_gate (
     output wire out
 );
 
+    assign out = in1&in2;
 endmodule
