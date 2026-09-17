@@ -1,0 +1,11 @@
+[shiftReg0] line 7: shiftReg declared as wire but assigned inside always @(posedge clk) block -- changed shiftReg to reg
+
+[shiftReg1] line 29: continuous assign to reg is invalid syntax -- changed to always @(posedge clk) block
+
+[shiftReg2] line 46: shifts din in from wrong end (MSB instead of LSB) -- changed {din, shiftReg[3:1]} to {shiftReg[2:0], din}
+
+[shiftReg3] line 64: reset is if-blocked but shift assignment is not else-blocked; it will always executes which is undefined behaviour when reset is set! -- moved shift into else block so only one assignment per clock edge
+
+[shiftReg4] line 78: missing posedge keyword in sensitivity list -- changed @(clk) to @(posedge clk)
+
+[shiftReg5] line 99,101: uses blocking assignment (=) instead of non-blocking (<=) -- changed = to <= to avoid race conditions when chaining multiple shift registers

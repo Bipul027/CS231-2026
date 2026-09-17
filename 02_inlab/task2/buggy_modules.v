@@ -4,7 +4,7 @@ module shiftReg0 (
     input din,
     output [3:0] q
 );
-    wire [3:0] shiftReg;  
+    reg [3:0] shiftReg;  
 
     assign q = shiftReg;
 
@@ -26,7 +26,9 @@ module shiftReg1 (
 
     assign q = shiftReg;
 
-    assign shiftReg = rst ? 4'b0000 : {shiftReg[2:0], din};  
+    always @(posedge clk) begin
+            shiftReg <= rst ? 4'b0000 : {shiftReg[2:0], din};  
+    end
 endmodule
 
 module shiftReg2 (
@@ -43,7 +45,7 @@ module shiftReg2 (
         if (rst)
             shiftReg <= 4'b0000;
         else
-            shiftReg <= {din, shiftReg[3:1]};
+            shiftReg <= {shiftReg[2:0], din};
     end
 endmodule
 
@@ -61,7 +63,8 @@ module shiftReg3 (
             if (rst == 1'b1) begin
                 shiftReg <= 4'b0000;
             end
-            shiftReg <= {shiftReg[2:0], din}; 
+            else 
+                shiftReg <= {shiftReg[2:0], din}; 
         end
 endmodule
 
@@ -75,7 +78,7 @@ module shiftReg4 (
 
         assign q = shiftReg;
 
-        always @(clk) begin
+        always @(posedge clk) begin
             if (rst)
                 shiftReg <= 4'b0000;
             else
@@ -96,9 +99,9 @@ module shiftReg5 (
 
     always @(posedge clk) begin
         if (rst)
-            shiftReg = 4'b0000;
+            shiftReg <= 4'b0000;
         else
-            shiftReg = {shiftReg[2:0], din};
+            shiftReg <= {shiftReg[2:0], din};
     end
 endmodule
 
@@ -108,5 +111,5 @@ module shiftReg (
     input din,
     output [3:0] q
 );
-
+    shiftReg3 sr(clk, rst, din, q);
 endmodule

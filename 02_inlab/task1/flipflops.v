@@ -3,7 +3,9 @@ module dFlipFlop (
     input d,
     output reg q
 );
-    
+    always @(posedge clk) begin
+        q <= d;
+    end
 endmodule
 
 module tFlipFlop (
@@ -11,7 +13,9 @@ module tFlipFlop (
     input t,
     output reg q
 );
-    
+    always @(posedge clk) begin
+        q <= (t ^ q);
+    end
 endmodule
 
 module buffer (
@@ -21,5 +25,7 @@ module buffer (
     
     // Combinational logic can be written using assign statements
     // The output changes immediately with the input
+
+    assign q = d;
 
 endmodule
