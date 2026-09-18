@@ -10,9 +10,9 @@ module triple_decoder (
     wire B = triple[1];
     wire C = triple[0];
 
-    assign valid =   /* V from your K-map */;
-    assign pair[1] = /* X from your K-map */;
-    assign pair[0] = /* Y from your K-map */;
+    assign valid   = (~A & B) | (~B & C);
+    assign pair[1] = (B & C)  | (A & ~B);
+    assign pair[0] = (B & ~C) | (A & ~B);
 endmodule
 
 
@@ -56,10 +56,26 @@ module jean_grey_decoder (
 
     reg [1:0] state;
     reg [3:0] remaining;
-    /*reg/wire       capture;*/
+    wire       capture;
 
-    triple_decoder td ( /* connect ports */ );
-    secret_accumulator sa ( /* connect ports */ );
+    wire        is_triple_valid;
+    wire [1:0]  triple_pair;
+
+    triple_decoder td ( 
+        .triple     (triple),
+        .valid      (is_triple_valid),
+        .pair       (triple_pair)
+    );
+
+    secret_accumulator sa ( 
+        .clk        (clk),
+        .rst        (rst),
+        .triple     (triple),
+        .capture    (capture),
+        .secret     (secret)
+    );
+
+    assign capture = (state == INTERCEPT);
 
     // ! Please note carefully that you set all relevant outputs correctly
     always @(posedge clk or posedge rst) begin
@@ -85,18 +101,33 @@ module jean_grey_decoder (
                 end
 
                 READ: begin
-                    /* Your Code Here */
+                    secret_out <= 1'b0;
+                    if (is_triple_valid) begin
+                        pair        <= triple_pair;
+                        valid_out   <= 1'b1;
+                        remaining   <= remaining - 1;
+                        if (remaining == 4'b0001)
+                            state <= DONE;
+                    end
+                    else begin
+                        pair        <= 2'b00;
+                        valid_out   <= 1'b0;
+                        state       <= INTERCEPT;
+                    end
                 end
 
                 INTERCEPT: begin
-                    /* Your Code Here */
+                    secret_out  <= 1'b1;
+                    pair        <= 2'b00;
+                    valid_out   <= 1'b0;
+                    state       <= READ;
                 end
 
                 DONE: begin
-                    done      <= 1'b1;
-                    valid_out <= 1'b0;
-                    pair      <= 2'b00;
-                    state     <= IDLE;
+                    done        <= 1'b1;
+                    valid_out   <= 1'b0;
+                    pair        <= 2'b00;
+                    state       <= IDLE;
                 end
 
             endcase
